@@ -70,10 +70,10 @@ export default class MoviesDAO {
       // and _id. Do not put a limit in your own implementation, the limit
       // here is only included to avoid sending 46000 documents down the
       // wire.
-      
-     // cursor = await movies.find().limit(1)
 
-     cursor = await movies.find({ countries:{ $in : countries } }).project({title: 1})
+      // cursor = await movies.find().limit(1)
+
+      cursor = await movies.find({ countries: { $in: countries } }).project({ title: 1 })
     } catch (e) {
       console.error(`Unable to issue find command, ${e}`)
       return []
@@ -213,7 +213,7 @@ export default class MoviesDAO {
               },
             },
           },
-        }, ],
+        },],
         rating: [{
           $bucket: {
             groupBy: "$metacritic",
@@ -225,12 +225,12 @@ export default class MoviesDAO {
               },
             },
           },
-        }, ],
+        },],
         movies: [{
           $addFields: {
             title: "$title",
           },
-        }, ],
+        },],
       },
     }
 
@@ -320,7 +320,7 @@ export default class MoviesDAO {
 
     // TODO Ticket: Paging
     // Use the cursor to only return the movies that belong on the current page
-    const displayCursor = cursor.limit(moviesPerPage)
+    const displayCursor = cursor.limit(moviesPerPage).skip(moviesPerPage * page)
 
     try {
       const moviesList = await displayCursor.toArray()
